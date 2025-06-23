@@ -441,7 +441,7 @@ env = SCFabEnv(days=365,
 model = Model(input_dim=34,
              embed_size=64, 
              seq_len=50, 
-             num_enc=3, 
+             num_enc=4, 
              num_heads=4,
              hdim=96)
 
