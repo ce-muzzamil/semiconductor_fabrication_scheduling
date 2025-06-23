@@ -432,7 +432,7 @@ state_components = (E.A.L4M.S.OPERATION_TYPE.NO_LOTS,
                     E.A.L4M.S.MACHINE.SETUP_PROCESSING_RATIO,
                     E.A.L4M.S.MACHINE.MACHINE_CLASS)
 
-env = SCFabEnv(days=60, 
+env = SCFabEnv(days=365, 
                dataset="SMT2020_HVLM", 
                dispatcher="fifo", 
                seed=42, 
@@ -473,8 +473,7 @@ for iter in range(1000):
                            policy_loss=ploss,
                            value_loss=vloss,
                            total_rewards=np.sum(reward_buf),
-                           done_lots=len(env.instance.done_lots)
-                           )
+                           done_lots=len(env.instance.done_lots))
     env.logger.commit()
     print(f"[{iter}] R: {np.sum(reward_buf):.6f}, PLoss: {ploss:.6f}, VLoss: {vloss:.6f}, DoneLots: {len(env.instance.done_lots)}")
     print(f"Iteration {iter}, Throughput: {np.sum(env.metrics['throughput'])}, Tardiness: {np.sum(env.metrics['tardiness'])}, Reward: {np.sum(env.metrics['reward'])}")
