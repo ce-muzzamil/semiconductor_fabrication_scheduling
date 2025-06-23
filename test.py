@@ -21,6 +21,7 @@ from torch.optim import Adam
 from torch.distributions import Categorical
 from simulation.classes import Lot
 from statistics import mean, median
+from logger import Logger
 import matplotlib.pyplot as plt
 r = Randomizer()
 
@@ -44,6 +45,7 @@ class SCFabEnv:
         }
         self._state = None
         self.lots_done = 0
+        self.logger = Logger("logs.csv")
 
     def process(self):
         machines_to_check = list(self.instance.usable_machines)
@@ -151,6 +153,7 @@ class SCFabEnv:
         self.lots_done = 0
         self.instance = FileInstance(self.files, run_to, True, [])
         self.process()
+        self.eid = np.random.randint(999_999_999)
         return self.state
 
     def step(self, action):
@@ -183,13 +186,19 @@ class SCFabEnv:
             lateness_hours = max(0, (lot.done_at - lot.deadline_at) / 3600)
             step_tardiness += lateness_hours
 
-            self.metrics['throughput'].append(step_throughput)
-            self.metrics['tardiness'].append(step_tardiness)
-            
+        self.metrics['throughput'].append(step_throughput)
+        self.metrics['tardiness'].append(step_tardiness)
         self.metrics['reward'].append(reward)
 
         self.lots_done = len(self.instance.done_lots)
         self.process()
+        self.logger.add_to_pool(id=self.eid, 
+                                time=self.instance.current_time,
+                                num_actions=len(self.machine_lot_group_pair),
+                                reward=reward,
+                                throughput=step_throughput,
+                                tardiness=step_tardiness)
+        
         return self.state, reward, done, {}
     
 
