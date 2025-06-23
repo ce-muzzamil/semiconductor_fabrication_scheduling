@@ -343,6 +343,7 @@ def collect_rollout(env, model, rollout_len=2048):
             print("Episode done, resetting environment")
             break
     print("counter: ", counter, "time:", {np.round(env.instance.current_time/3600/24, 3)})
+    
 
     return obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf
 
@@ -442,7 +443,7 @@ state_components = (E.A.L4M.S.OPERATION_TYPE.NO_LOTS,
                     E.A.L4M.S.MACHINE.SETUP_PROCESSING_RATIO,
                     E.A.L4M.S.MACHINE.MACHINE_CLASS)
 
-env = SCFabEnv(days=60, 
+env = SCFabEnv(days=30, 
                dataset="SMT2020_HVLM", 
                dispatcher="fifo", 
                seed=42, 
