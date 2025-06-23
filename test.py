@@ -45,7 +45,7 @@ class SCFabEnv:
         }
         self._state = None
         self.lots_done = 0
-        self.logger = Logger("/")
+        self.logger = Logger("logs")
 
     def process(self):
         machines_to_check = list(self.instance.usable_machines)
