@@ -368,7 +368,7 @@ def ppo_update(model, optimizer, obs_buf, action_buf, reward_buf, done_buf, logp
     indices = np.random.randint(0, size, min(size, 2048))
     obs_buf = [obs_buf[i] for i in indices]
     logp_buf = [logp_buf[i] for i in indices]
-    act_batch = [act_batch[i] for i in indices]
+    action_buf = [action_buf[i] for i in indices]
     reward_buf = [reward_buf[i] for i in indices]
     done_buf = [done_buf[i] for i in indices]
     value_buf = [value_buf[i] for i in indices]
