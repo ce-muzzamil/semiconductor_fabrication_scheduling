@@ -192,7 +192,7 @@ class SCFabEnv:
 
         self.lots_done = len(self.instance.done_lots)
         self.process()
-        self.logger.add_to_pool(id=self.eid, 
+        self.logger.add_to_pool(eid=self.eid, 
                                 time=self.instance.current_time,
                                 num_actions=len(self.machine_lot_group_pair),
                                 reward=reward,
