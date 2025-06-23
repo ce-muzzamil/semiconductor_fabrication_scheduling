@@ -348,7 +348,7 @@ def collect_rollout(env, model, rollout_len=2048):
 
 
 def ppo_update(model, optimizer, obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf,
-               gamma=0.95, lam=0.95, clip_ratio=0.2, epochs=5, batch_size=32):
+               gamma=0.98, lam=0.95, clip_ratio=0.2, epochs=5, batch_size=32):
 
     returns = []
     advs = []
