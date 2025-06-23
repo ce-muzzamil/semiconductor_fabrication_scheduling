@@ -177,7 +177,7 @@ class SCFabEnv:
 
         for i in range(self.lots_done, len(self.instance.done_lots)):
             lot = self.instance.done_lots[i]
-            reward += 1 if lot.deadline_at >= lot.done_at else -1
+            reward += 1 if lot.deadline_at >= lot.done_at else -2
 
         new_lots_done = self.instance.done_lots[self.lots_done:]
 
@@ -366,6 +366,7 @@ def ppo_update(model, optimizer, obs_buf, action_buf, reward_buf, done_buf, logp
     
     size = len(obs_buf)
     indices = np.random.randint(0, size, min(size, 8196))
+    
     obs_buf = [obs_buf[i] for i in indices]
     logp_buf = [logp_buf[i] for i in indices]
     action_buf = [action_buf[i] for i in indices]
