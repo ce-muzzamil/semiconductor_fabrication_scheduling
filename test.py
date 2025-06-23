@@ -363,7 +363,17 @@ def ppo_update(model, optimizer, obs_buf, action_buf, reward_buf, done_buf, logp
         advs.insert(0, gae)
         last_value = value_buf[t]
         returns.insert(0, gae + value_buf[t])
-
+    
+    size = len(obs_buf)
+    indices = np.random.randint(0, size, min(size, 2048))
+    obs_buf = [obs_buf[i] for i in indices]
+    logp_buf = [logp_buf[i] for i in indices]
+    act_batch = [act_batch[i] for i in indices]
+    reward_buf = [reward_buf[i] for i in indices]
+    done_buf = [done_buf[i] for i in indices]
+    value_buf = [value_buf[i] for i in indices]
+    advs = [advs[i] for i in indices]
+    returns = [returns[i] for i in indices]
     advs = torch.tensor(advs, dtype=torch.float32, requires_grad=False)
     returns = torch.tensor(returns, dtype=torch.float32, requires_grad=False)
 
@@ -432,7 +442,7 @@ state_components = (E.A.L4M.S.OPERATION_TYPE.NO_LOTS,
                     E.A.L4M.S.MACHINE.SETUP_PROCESSING_RATIO,
                     E.A.L4M.S.MACHINE.MACHINE_CLASS)
 
-env = SCFabEnv(days=30, 
+env = SCFabEnv(days=60, 
                dataset="SMT2020_HVLM", 
                dispatcher="fifo", 
                seed=42, 
