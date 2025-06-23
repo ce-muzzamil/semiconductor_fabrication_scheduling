@@ -346,7 +346,6 @@ def collect_rollout(env, model, rollout_len=2048):
 
     return obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf
 
-
 def ppo_update(model, optimizer, obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf,
                gamma=0.98, lam=0.95, clip_ratio=0.2, epochs=1, batch_size=32):
 
