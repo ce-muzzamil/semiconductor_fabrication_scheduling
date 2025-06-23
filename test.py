@@ -348,7 +348,7 @@ def collect_rollout(env, model, rollout_len=2048):
 
 
 def ppo_update(model, optimizer, obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf,
-               gamma=0.98, lam=0.95, clip_ratio=0.2, epochs=5, batch_size=32):
+               gamma=0.98, lam=0.95, clip_ratio=0.2, epochs=1, batch_size=32):
 
     returns = []
     advs = []
@@ -365,7 +365,7 @@ def ppo_update(model, optimizer, obs_buf, action_buf, reward_buf, done_buf, logp
         returns.insert(0, gae + value_buf[t])
     
     size = len(obs_buf)
-    indices = np.random.randint(0, size, min(size, 2048))
+    indices = np.random.randint(0, size, min(size, 8196))
     obs_buf = [obs_buf[i] for i in indices]
     logp_buf = [logp_buf[i] for i in indices]
     action_buf = [action_buf[i] for i in indices]
