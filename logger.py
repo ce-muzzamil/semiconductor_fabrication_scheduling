@@ -13,6 +13,10 @@ class Logger:
                        reward
                        throughput
                        tardiness
+                       policy_loss
+                       value_loss
+                       total_rewards
+                       done_lots
                        ''').split('\n')
         
         self.fields = [x.strip() for x in self.fields]

@@ -198,7 +198,7 @@ class SCFabEnv:
                                 reward=reward,
                                 throughput=step_throughput,
                                 tardiness=step_tardiness)
-        
+        env.logger.commit()
         return self.state, reward, done, {}
     
 
@@ -469,6 +469,13 @@ print(np.round(env.machine_lot_group_pair[0][-1][0].deadline_at/3600, 3), np.rou
 for iter in range(1000):
     obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf = collect_rollout(env, model, rollout_len=100000000)
     ploss, vloss = ppo_update(model, optimizer, obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf)
+    env.logger.add_to_pool(eid=env.eid, 
+                           policy_loss=ploss,
+                           value_loss=vloss,
+                           total_rewards=np.sum(reward_buf),
+                           done_lots=len(env.instance.done_lots)
+                           )
+    env.logger.commit()
     print(f"[{iter}] R: {np.sum(reward_buf):.6f}, PLoss: {ploss:.6f}, VLoss: {vloss:.6f}, DoneLots: {len(env.instance.done_lots)}")
     print(f"Iteration {iter}, Throughput: {np.sum(env.metrics['throughput'])}, Tardiness: {np.sum(env.metrics['tardiness'])}, Reward: {np.sum(env.metrics['reward'])}")
     env.metrics = {'throughput': [], 'tardiness': [], 'reward': []}
