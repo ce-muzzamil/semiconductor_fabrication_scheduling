@@ -227,7 +227,7 @@ class FeatureExtractor(nn.Module):
     def forward(self, x): 
         x = self.pos_encoder(x)
         x = self.transformer_encoder(x)
-        return x
+        return x #N,L,E
 
 class EMB(nn.Module):
     def __init__(self, embed_size, hdim, drp=0.1):
@@ -244,7 +244,7 @@ class EMB(nn.Module):
     def forward(self, x):
         #N,L,E -> N,L,E
         x = self.mlp(x)
-        return x.squeeze(-1)
+        return x
 
 
 class Actor(nn.Module):
@@ -276,6 +276,7 @@ class critic(nn.Module):
             nn.GELU(),
             nn.Linear(hdim, 1),
         )
+
     def forward(self, x):
         #N,L,E -> N,1
         x = self.mlp(x.mean(1))
@@ -298,7 +299,6 @@ class Model(nn.Module):
     
     def forward(self, x):
         # x: (N, L, E)
-
         unsqueezed = False
         if x.ndim == 2:
             x = x.unsqueeze(0)
@@ -307,10 +307,12 @@ class Model(nn.Module):
         x = self.embedding(x)
         x_a = self.fe(x)
         x_c = self.feature_extractor(x_a)  # (N, L, E)
-        logits, values = self.actor(x_a), self.critic(x_c)
+        logits, values = self.actor(x_c), self.critic(x_c)
+
         if unsqueezed:
             logits = logits.squeeze(0)
             values = values.squeeze(0)
+
         return logits, values
 
 def collect_rollout(env, model, rollout_len=2048):
