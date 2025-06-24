@@ -345,11 +345,11 @@ def collect_rollout(env, model, rollout_len=2048):
             print("Episode done, resetting environment")
             break
 
-    # for i in range(len(info_buf)):
-    #     for lot in info_buf[i]["done_lots"]:
-    #         for j in range(i):
-    #             if info_buf[j]["time"] == lot.tag:
-    #                 reward_buf[j] += 10 if lot.deadline_at >= lot.done_at else 1
+    for i in range(len(info_buf)):
+        for lot in info_buf[i]["done_lots"]:
+            for j in range(i):
+                if info_buf[j]["time"] == lot.tag:
+                    reward_buf[j] += 10 if lot.deadline_at >= lot.done_at else 1
  
     print("counter: ", counter, "time:", {np.round(env.instance.current_time/3600/24, 3)})
     
@@ -481,11 +481,11 @@ model = Model(input_dim=34,
 #         print(np.round(env.instance.current_time/3600, 3), len(env.instance.usable_machines), len(env.instance.done_lots))
 
 optimizer = Adam(model.parameters(), lr=1e-4)
-# _ = env.reset()
-# for _ in range(10000):
-#     env.step(0)
+_ = env.reset()
+for _ in range(10000):
+    env.step(0)
 
-# print(np.round(env.machine_lot_group_pair[0][-1][0].deadline_at/3600, 3), np.round(env.instance.current_time/3600, 3), len(env.instance.usable_machines))
+print(np.round(env.machine_lot_group_pair[0][-1][0].deadline_at/3600, 3), np.round(env.instance.current_time/3600, 3), len(env.instance.usable_machines))
 
 for iter in range(1000):
     obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf = collect_rollout(env, model, rollout_len=100000000)
