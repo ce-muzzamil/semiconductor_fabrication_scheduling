@@ -350,7 +350,8 @@ def collect_rollout(env, model, rollout_len=2048):
         for lot in info_buf[i]["done_lots"]:
             for j in range(i):
                 if info_buf[j]["time"] == lot.tag:
-                    reward_buf[j] += 10 if lot.deadline_at >= lot.done_at else 1
+                    reward_buf[j] += max(lot.deadline_at - lot.done_at, 0)
+                    # reward_buf[j] += 10 if lot.deadline_at >= lot.done_at else 1
  
     print("counter: ", counter, "time:", {np.round(env.instance.current_time/3600/24, 3)})
     
@@ -372,19 +373,6 @@ def ppo_update(model, optimizer, obs_buf, action_buf, reward_buf, done_buf, logp
         advs.insert(0, gae)
         last_value = value_buf[t]
         returns.insert(0, gae + value_buf[t])
-    
-    # size = len(obs_buf)
-    # indices = np.random.randint(0, size, min(size, 8196))
-    
-    # obs_buf = [obs_buf[i] for i in indices]
-    # logp_buf = [logp_buf[i] for i in indices]
-    # action_buf = [action_buf[i] for i in indices]
-    # reward_buf = [reward_buf[i] for i in indices]
-    # done_buf = [done_buf[i] for i in indices]
-    # value_buf = [value_buf[i] for i in indices]
-    # advs = [advs[i] for i in indices]
-    # returns = [returns[i] for i in indices]
-
 
     advs = torch.tensor(advs, dtype=torch.float32, requires_grad=False)
     returns = torch.tensor(returns, dtype=torch.float32, requires_grad=False)
