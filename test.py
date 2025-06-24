@@ -481,11 +481,11 @@ model = Model(input_dim=34,
 #         print(np.round(env.instance.current_time/3600, 3), len(env.instance.usable_machines), len(env.instance.done_lots))
 
 optimizer = Adam(model.parameters(), lr=1e-4)
-_ = env.reset()
-for _ in range(10000):
-    env.step(0)
+# _ = env.reset()
+# for _ in range(10000):
+#     env.step(0)
 
-print(np.round(env.machine_lot_group_pair[0][-1][0].deadline_at/3600, 3), np.round(env.instance.current_time/3600, 3), len(env.instance.usable_machines))
+# print(np.round(env.machine_lot_group_pair[0][-1][0].deadline_at/3600, 3), np.round(env.instance.current_time/3600, 3), len(env.instance.usable_machines))
 
 for iter in range(1000):
     obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf = collect_rollout(env, model, rollout_len=100000000)
