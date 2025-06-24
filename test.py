@@ -343,7 +343,7 @@ def collect_rollout(env, model, rollout_len=2048):
             info_buf.append(info)
         obs = next_obs
         if done:
-            print("Episode done, resetting environment")
+            # print("Episode done, resetting environment")
             break
 
     for i in range(len(info_buf)):
