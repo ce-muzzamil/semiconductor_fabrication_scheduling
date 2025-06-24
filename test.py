@@ -183,7 +183,7 @@ class SCFabEnv:
 
         for lot in new_lots_done:
             step_throughput += 1
-            lateness_hours = max(0, (lot.done_at - lot.deadline_at) / 3600)
+            lateness_hours = 0 if lot.deadline_at >= lot.done_at else 1 #max(0, (lot.done_at - lot.deadline_at) / 3600)
             step_tardiness += lateness_hours
 
         self.metrics['throughput'].append(step_throughput)
