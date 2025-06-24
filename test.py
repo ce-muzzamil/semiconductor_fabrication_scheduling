@@ -177,7 +177,7 @@ class SCFabEnv:
 
         for i in range(self.lots_done, len(self.instance.done_lots)):
             lot = self.instance.done_lots[i]
-            reward += 1 if lot.deadline_at >= lot.done_at else -2
+            reward += 1 if lot.deadline_at >= lot.done_at else 0
 
         new_lots_done = self.instance.done_lots[self.lots_done:]
 
