@@ -345,11 +345,11 @@ def collect_rollout(env, model, rollout_len=2048):
             print("Episode done, resetting environment")
             break
 
-    for i in range(len(info_buf)):
-        for lot in info_buf[i]["done_lots"]:
-            for j in range(i):
-                if info_buf[j]["time"] == lot.tag:
-                    reward_buf[j] += 10 if lot.deadline_at >= lot.done_at else 1
+    # for i in range(len(info_buf)):
+    #     for lot in info_buf[i]["done_lots"]:
+    #         for j in range(i):
+    #             if info_buf[j]["time"] == lot.tag:
+    #                 reward_buf[j] += 10 if lot.deadline_at >= lot.done_at else 1
  
     print("counter: ", counter, "time:", {np.round(env.instance.current_time/3600/24, 3)})
     
