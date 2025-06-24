@@ -198,7 +198,7 @@ class SCFabEnv:
                                 reward=reward,
                                 throughput=step_throughput,
                                 tardiness=step_tardiness)
-        env.logger.commit()
+        self.logger.commit()
         return self.state, reward, done, info
     
 
