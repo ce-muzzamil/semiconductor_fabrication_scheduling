@@ -353,7 +353,7 @@ def collect_rollout(env, model, rollout_len=2048):
                     reward_buf[j] += (lot.deadline_at - lot.done_at)/100
                     # reward_buf[j] += 10 if lot.deadline_at >= lot.done_at else 1
  
-    print("counter: ", counter, "time:", {np.round(env.instance.current_time/3600/24, 3)})
+    # print("counter: ", counter, "time:", {np.round(env.instance.current_time/3600/24, 3)})
     
     return obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf
 
