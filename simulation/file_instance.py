@@ -49,7 +49,7 @@ class FileInstance(Instance):
             assert pieces == order['PIECES']
             first_release = 0
             release_interval = get_interval(order['REPEAT'], order['RUNITS'])
-            relative_deadline = (date_time_parse(order['DUE']) - date_time_parse(order['START'])).total_seconds()/100
+            relative_deadline = (date_time_parse(order['DUE']) - date_time_parse(order['START'])).total_seconds()/120
 
             for i in range(order['RPT#']):
                 rel_time = first_release + i * release_interval
