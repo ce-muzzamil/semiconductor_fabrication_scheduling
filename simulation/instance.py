@@ -117,6 +117,9 @@ class Instance:
 
     def dispatch(self, machine: Machine, lots: List[Lot]):
         # remove machine and lot from active sets
+        for lot in lots:
+            lot.tag = self.time
+            
         self.reserve_machine_lot(lots, machine)
         lwam = self.lot_waiting_at_machine[machine.family]
         self.lot_waiting_at_machine[machine.family] = (lwam[0] + len(lots),

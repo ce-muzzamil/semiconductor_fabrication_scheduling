@@ -161,7 +161,6 @@ class SCFabEnv:
             machine, lot_group = self.machine_lot_group_pair[action]
             lot = lot_group[0]
             lots = lot_group[:min(len(lot_group), lot.actual_step.batch_max)]
-            violated_minruns = machine.min_runs_left is not None and machine.min_runs_setup == lot.actual_step.setup_needed
             self.instance.dispatch(machine, lots)
 
         step_throughput = 0
@@ -172,35 +171,36 @@ class SCFabEnv:
             done = True
 
         reward = 0
-        # if violated_minruns:
-        #     reward += -1
+        info = {"time": self.instance.time, "done_lots":[]}
 
-        for i in range(self.lots_done, len(self.instance.done_lots)):
-            reward += 1
-            lot = self.instance.done_lots[i]
-            reward += 10 if lot.deadline_at >= lot.done_at else 0
+        if len(self.machine_lot_group_pair) > 0:
+            for i in range(self.lots_done, len(self.instance.done_lots)):
+                # reward += 1
+                lot = self.instance.done_lots[i]
+                info['done_lots'].append(lot)
+                # reward += 10 if lot.deadline_at >= lot.done_at else 0
 
-        new_lots_done = self.instance.done_lots[self.lots_done:]
+            new_lots_done = self.instance.done_lots[self.lots_done:]
 
-        for lot in new_lots_done:
-            step_throughput += 1
-            lateness_hours = max(0, (lot.done_at - lot.deadline_at) / 3600)
-            step_tardiness += lateness_hours
+            for lot in new_lots_done:
+                step_throughput += 1
+                lateness_hours = max(0, (lot.done_at - lot.deadline_at) / 3600)
+                step_tardiness += lateness_hours
 
-        self.metrics['throughput'].append(step_throughput)
-        self.metrics['tardiness'].append(step_tardiness)
-        self.metrics['reward'].append(reward)
+            self.metrics['throughput'].append(step_throughput)
+            self.metrics['tardiness'].append(step_tardiness)
+            self.metrics['reward'].append(reward)
 
-        self.lots_done = len(self.instance.done_lots)
-        self.process()
-        self.logger.add_to_pool(eid=self.eid, 
-                                time=self.instance.current_time,
-                                num_actions=len(self.machine_lot_group_pair),
-                                reward=reward,
-                                throughput=step_throughput,
-                                tardiness=step_tardiness)
-        env.logger.commit()
-        return self.state, reward, done, {}
+            self.lots_done = len(self.instance.done_lots)
+            self.process()
+            self.logger.add_to_pool(eid=self.eid, 
+                                    time=self.instance.current_time,
+                                    num_actions=len(self.machine_lot_group_pair),
+                                    reward=reward,
+                                    throughput=step_throughput,
+                                    tardiness=step_tardiness)
+            env.logger.commit()
+        return self.state, reward, done, info
     
 
 class LearnablePositionalEncoding(nn.Module):
@@ -315,7 +315,7 @@ class Model(nn.Module):
         return logits, values
 
 def collect_rollout(env, model, rollout_len=2048):
-    obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf = [], [], [], [], [], []
+    obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf, info_buf = [], [], [], [], [], [], []
     obs = env.reset()
     for counter in range(rollout_len):
         store = False
@@ -335,17 +335,24 @@ def collect_rollout(env, model, rollout_len=2048):
             action_buf.append(action)
             store = True
 
-        next_obs, reward, done, _ = env.step(action if isinstance(action, int) else action.item())
+        next_obs, reward, done, info = env.step(action if isinstance(action, int) else action.item())
         if store:
             reward_buf.append(torch.tensor(reward, dtype=torch.float32))
             done_buf.append(done)
+            info_buf.append(info)
         obs = next_obs
         if done:
             print("Episode done, resetting environment")
             break
+
+    for i in range(len(info_buf)):
+        for lot in info_buf[i]["done_lots"]:
+            for j in range(i):
+                if info_buf[j]["time"] == lot.tag:
+                    reward_buf[j] += 10 if lot.deadline_at >= lot.done_at else 1
+ 
     print("counter: ", counter, "time:", {np.round(env.instance.current_time/3600/24, 3)})
     
-
     return obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf
 
 def ppo_update(model, optimizer, obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf,

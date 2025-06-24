@@ -142,6 +142,7 @@ class Step:
 
 class Lot:
     def __init__(self, idx, route, priority, release, relative_deadline, d):
+        self.tag = 0
         self.idx = idx
         self.remaining_steps = [step for step in route.steps]
         self.actual_step: Step = None
