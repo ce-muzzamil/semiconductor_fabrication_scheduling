@@ -445,7 +445,7 @@ state_components = (E.A.L4M.S.OPERATION_TYPE.NO_LOTS,
                     E.A.L4M.S.MACHINE.SETUP_PROCESSING_RATIO,
                     E.A.L4M.S.MACHINE.MACHINE_CLASS)
 
-env = SCFabEnv(days=10, 
+env = SCFabEnv(days=5, 
                dataset="SMT2020_HVLM", 
                dispatcher="fifo", 
                seed=42, 
