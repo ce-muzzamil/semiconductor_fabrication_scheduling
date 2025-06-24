@@ -364,17 +364,19 @@ def ppo_update(model, optimizer, obs_buf, action_buf, reward_buf, done_buf, logp
         last_value = value_buf[t]
         returns.insert(0, gae + value_buf[t])
     
-    size = len(obs_buf)
-    indices = np.random.randint(0, size, min(size, 8196))
+    # size = len(obs_buf)
+    # indices = np.random.randint(0, size, min(size, 8196))
     
-    obs_buf = [obs_buf[i] for i in indices]
-    logp_buf = [logp_buf[i] for i in indices]
-    action_buf = [action_buf[i] for i in indices]
-    reward_buf = [reward_buf[i] for i in indices]
-    done_buf = [done_buf[i] for i in indices]
-    value_buf = [value_buf[i] for i in indices]
-    advs = [advs[i] for i in indices]
-    returns = [returns[i] for i in indices]
+    # obs_buf = [obs_buf[i] for i in indices]
+    # logp_buf = [logp_buf[i] for i in indices]
+    # action_buf = [action_buf[i] for i in indices]
+    # reward_buf = [reward_buf[i] for i in indices]
+    # done_buf = [done_buf[i] for i in indices]
+    # value_buf = [value_buf[i] for i in indices]
+    # advs = [advs[i] for i in indices]
+    # returns = [returns[i] for i in indices]
+
+
     advs = torch.tensor(advs, dtype=torch.float32, requires_grad=False)
     returns = torch.tensor(returns, dtype=torch.float32, requires_grad=False)
 
@@ -479,13 +481,14 @@ print(np.round(env.machine_lot_group_pair[0][-1][0].deadline_at/3600, 3), np.rou
 
 for iter in range(1000):
     obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf = collect_rollout(env, model, rollout_len=100000000)
-    ploss, vloss = ppo_update(model, optimizer, obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf)
-    env.logger.add_to_pool(eid=env.eid, 
-                           policy_loss=ploss,
-                           value_loss=vloss,
-                           total_rewards=np.sum(reward_buf),
-                           done_lots=len(env.instance.done_lots))
-    env.logger.commit()
-    print(f"[{iter}] R: {np.sum(reward_buf):.6f}, PLoss: {ploss:.6f}, VLoss: {vloss:.6f}, DoneLots: {len(env.instance.done_lots)}")
-    print(f"Iteration {iter}, Throughput: {np.sum(env.metrics['throughput'])}, Tardiness: {np.sum(env.metrics['tardiness'])}, Reward: {np.sum(env.metrics['reward'])}")
-    env.metrics = {'throughput': [], 'tardiness': [], 'reward': []}
+    if np.sum(reward_buf)>0:
+        ploss, vloss = ppo_update(model, optimizer, obs_buf, action_buf, reward_buf, done_buf, logp_buf, value_buf)
+        env.logger.add_to_pool(eid=env.eid, 
+                            policy_loss=ploss,
+                            value_loss=vloss,
+                            total_rewards=np.sum(reward_buf),
+                            done_lots=len(env.instance.done_lots))
+        env.logger.commit()
+        print(f"[{iter}] R: {np.sum(reward_buf):.6f}, PLoss: {ploss:.6f}, VLoss: {vloss:.6f}, DoneLots: {len(env.instance.done_lots)}")
+        print(f"Iteration {iter}, Throughput: {np.sum(env.metrics['throughput'])}, Tardiness: {np.sum(env.metrics['tardiness'])}, Reward: {np.sum(env.metrics['reward'])}")
+        env.metrics = {'throughput': [], 'tardiness': [], 'reward': []}
