@@ -171,7 +171,7 @@ class SCFabEnv:
             done = True
 
         reward = 0
-        info = {"time": self.instance.time, "done_lots":[]}
+        info = {"time": self.instance.current_time, "done_lots":[]}
 
         if len(self.machine_lot_group_pair) > 0:
             for i in range(self.lots_done, len(self.instance.done_lots)):
