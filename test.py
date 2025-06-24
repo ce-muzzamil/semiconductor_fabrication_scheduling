@@ -173,33 +173,32 @@ class SCFabEnv:
         reward = 0
         info = {"time": self.instance.current_time, "done_lots":[]}
 
-        if len(self.machine_lot_group_pair) > 0:
-            for i in range(self.lots_done, len(self.instance.done_lots)):
-                # reward += 1
-                lot = self.instance.done_lots[i]
-                info['done_lots'].append(lot)
-                # reward += 10 if lot.deadline_at >= lot.done_at else 0
+        for i in range(self.lots_done, len(self.instance.done_lots)):
+            # reward += 1
+            lot = self.instance.done_lots[i]
+            info['done_lots'].append(lot)
+            # reward += 10 if lot.deadline_at >= lot.done_at else 0
 
-            new_lots_done = self.instance.done_lots[self.lots_done:]
+        new_lots_done = self.instance.done_lots[self.lots_done:]
 
-            for lot in new_lots_done:
-                step_throughput += 1
-                lateness_hours = max(0, (lot.done_at - lot.deadline_at) / 3600)
-                step_tardiness += lateness_hours
+        for lot in new_lots_done:
+            step_throughput += 1
+            lateness_hours = max(0, (lot.done_at - lot.deadline_at) / 3600)
+            step_tardiness += lateness_hours
 
-            self.metrics['throughput'].append(step_throughput)
-            self.metrics['tardiness'].append(step_tardiness)
-            self.metrics['reward'].append(reward)
+        self.metrics['throughput'].append(step_throughput)
+        self.metrics['tardiness'].append(step_tardiness)
+        self.metrics['reward'].append(reward)
 
-            self.lots_done = len(self.instance.done_lots)
-            self.process()
-            self.logger.add_to_pool(eid=self.eid, 
-                                    time=self.instance.current_time,
-                                    num_actions=len(self.machine_lot_group_pair),
-                                    reward=reward,
-                                    throughput=step_throughput,
-                                    tardiness=step_tardiness)
-            env.logger.commit()
+        self.lots_done = len(self.instance.done_lots)
+        self.process()
+        self.logger.add_to_pool(eid=self.eid, 
+                                time=self.instance.current_time,
+                                num_actions=len(self.machine_lot_group_pair),
+                                reward=reward,
+                                throughput=step_throughput,
+                                tardiness=step_tardiness)
+        env.logger.commit()
         return self.state, reward, done, info
     
 
@@ -453,7 +452,7 @@ state_components = (E.A.L4M.S.OPERATION_TYPE.NO_LOTS,
                     E.A.L4M.S.MACHINE.SETUP_PROCESSING_RATIO,
                     E.A.L4M.S.MACHINE.MACHINE_CLASS)
 
-env = SCFabEnv(days=10, 
+env = SCFabEnv(days=5, 
                dataset="SMT2020_HVLM", 
                dispatcher="fifo", 
                seed=42, 
