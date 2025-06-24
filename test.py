@@ -321,8 +321,8 @@ def collect_rollout(env, model, rollout_len=2048):
         store = False
         if obs.shape[0] == 0:
             action = 0
-        elif obs.shape[0] == 1:
-            action = 0
+        # elif obs.shape[0] == 1:
+        #     action = 0
         else:
             with torch.no_grad():
                 logits, value = model(torch.from_numpy(obs))
