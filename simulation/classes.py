@@ -8,7 +8,6 @@ r = Randomizer()
 
 machine_classes = {}
 
-
 def alt(d, a1, a2):
     return d[a1] if a1 in d else (d[a2] if a2 is not None else None)
 
@@ -160,15 +159,12 @@ class Lot:
             self.processed_steps, self.remaining_steps = self.remaining_steps[:cs - 1], self.remaining_steps[cs - 1:]
 
         self.pieces = d['PIECES']
-
         self.waiting_machines = []
-
         self.done_at = None
         self.free_since = None
 
         self.remaining_steps_last = -1
         self.remaining_time_last = 0
-
         self.dedications = {}
 
         self.waiting_time = 0
@@ -178,7 +174,6 @@ class Lot:
 
         self.cqt_waiting = None
         self.cqt_deadline = None
-
         self.ft = None
 
     def __hash__(self):
