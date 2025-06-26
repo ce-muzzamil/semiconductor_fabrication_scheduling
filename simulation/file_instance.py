@@ -21,7 +21,7 @@ class FileInstance(Instance):
                 family_locations[m.family] = m.loc
                 machines.append(m)
                 machine_id += 1
-                break
+                
 
         from_to = {(a['FROMLOC'], a['TOLOC']): get_distribution(a['DDIST'], a['DUNITS'], a['DTIME'], a['DTIME2']) for a
                    in files['fromto.txt']}
