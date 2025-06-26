@@ -42,18 +42,20 @@ class Instance:
 
         self.current_time = 0
 
+        print("Num non-zero lot machines", sum([len(i.waiting_lots)>0 for i in self.machines]))
         for plugin in self.plugins:
             plugin.on_sim_init(self)
 
         self.next_step()
 
+        print("Num non-zero lot machines", sum([len(i.waiting_lots)>0 for i in self.machines]))
         self.free_up_machines(self.machines)
 
         for br in breakdowns:
             self.add_event(br)
 
         self.printed_days = -1
-        print("Num non-zero lot machines", sum([len(i.waiting_lots)>0 for i in self.machines]))
+        
 
     @property
     def current_time_days(self):
