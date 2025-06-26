@@ -108,5 +108,4 @@ class FileInstance(Instance):
                         m.pms.append(br)
                     breakdowns.append(br)
 
-        print("Num non-zero lot machines", sum([len(i.waiting_lots)>0 for i in machines]))
         super().__init__(machines, routes, lots, setups, setup_min_run, breakdowns, lot_for_machine, plugins)

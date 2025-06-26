@@ -25,6 +25,7 @@ class Instance:
         self.family_machines = defaultdict(lambda: [])
         for m in self.machines:
             self.family_machines[m.family].append(m)
+
         self.routes: Dict[str, Route] = routes
         self.setups: Dict[Tuple, int] = setups
         self.setup_min_run: Dict[str, int] = setup_min_run
@@ -52,6 +53,7 @@ class Instance:
             self.add_event(br)
 
         self.printed_days = -1
+        print("Num non-zero lot machines", sum([len(i.waiting_lots)>0 for i in self.machines]))
 
     @property
     def current_time_days(self):
