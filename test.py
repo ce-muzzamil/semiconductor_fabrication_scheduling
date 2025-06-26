@@ -72,9 +72,9 @@ class SCFabEnv:
 
         self.machine_lot_group_pair = machine_lot_group_pair[:50]
         
-        # for machine in machine_to_remove:
-        #     if machine in self.instance.usable_machines:
-        #         self.instance.usable_machines.remove(machine)
+        for machine in machine_to_remove:
+            if machine in self.instance.usable_machines:
+                self.instance.usable_machines.remove(machine)
         
         self._state = None
 

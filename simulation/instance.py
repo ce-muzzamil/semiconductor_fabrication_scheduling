@@ -72,6 +72,7 @@ class Instance:
 
     def free_up_machines(self, machines):
         # add machine to list of available machines
+        print(len(machines), 'machines to free up')
         for machine in machines:
             machine.events.clear()
             self.dm.free_up_machine(self, machine)
