@@ -45,10 +45,8 @@ class Instance:
         for plugin in self.plugins:
             plugin.on_sim_init(self)
 
-        print("Num non-zero lot machines", sum([len(i.waiting_lots)>0 for i in self.machines]))
         self.next_step()
 
-        print("Num non-zero lot machines", sum([len(i.waiting_lots)>0 for i in self.machines]))
         self.free_up_machines(self.machines)
 
         for br in breakdowns:
@@ -62,6 +60,7 @@ class Instance:
         return self.current_time / 3600 / 24
 
     def next_step(self):
+        print("num events", len(self.events.arr))
         process_until = []
         if len(self.events.arr) > 0:
             process_until.append(max(0, self.events.first.timestamp))
@@ -72,6 +71,7 @@ class Instance:
             self.current_time = max(0, ev.timestamp, self.current_time)
             # print(f'Time stamp {self.current_time}')
             ev.handle(self)
+        print("Num non-zero lot machines", sum([len(i.waiting_lots)>0 for i in self.machines]))
         ReleaseEvent.handle(self, process_until)
 
     def free_up_machines(self, machines):
