@@ -207,7 +207,8 @@ class Instance:
         machine.setuped_time += setup_time
         machine.last_setup = machine.current_setup
         machine.current_setup = new_setup
-        return lot_time, machine_time, setup_time
+        sc = 128
+        return lot_time/sc, machine_time/sc, setup_time/sc
 
     def reserve_machine_lot(self, lots, machine):
         self.dm.reserve(self, lots, machine)
