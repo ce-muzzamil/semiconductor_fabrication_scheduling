@@ -42,10 +42,10 @@ class Instance:
 
         self.current_time = 0
 
-        print("Num non-zero lot machines", sum([len(i.waiting_lots)>0 for i in self.machines]))
         for plugin in self.plugins:
             plugin.on_sim_init(self)
 
+        print("Num non-zero lot machines", sum([len(i.waiting_lots)>0 for i in self.machines]))
         self.next_step()
 
         print("Num non-zero lot machines", sum([len(i.waiting_lots)>0 for i in self.machines]))
