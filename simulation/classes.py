@@ -29,6 +29,7 @@ class Machine:
         self.group = d['STNGRP']
         if self.group not in machine_classes:
             machine_classes[self.group] = len(machine_classes)
+            
         self.machine_class = machine_classes[self.group]
         self.loc = d['STNFAMLOC']
         self.family = d['STNFAM']

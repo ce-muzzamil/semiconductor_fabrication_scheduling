@@ -22,7 +22,6 @@ class FileInstance(Instance):
                 machines.append(m)
                 machine_id += 1
                 
-
         from_to = {(a['FROMLOC'], a['TOLOC']): get_distribution(a['DDIST'], a['DUNITS'], a['DTIME'], a['DTIME2']) for a
                    in files['fromto.txt']}
 
