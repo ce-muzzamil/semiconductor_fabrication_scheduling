@@ -351,9 +351,9 @@ def collect_rollout(env, model, rollout_len=2048):
             for j in range(i):
                 if info_buf[j]["time"] == lot.tag:
                     if (lot.deadline_at - lot.done_at) > 0:
-                        reward_buf[j] += 1
-                    else:
                         reward_buf[j] += 0
+                    else:
+                        reward_buf[j] += (lot.deadline_at - lot.done_at) / 3600
  
     # print("counter: ", counter, "time:", {np.round(env.instance.current_time/3600/24, 3)})
     
