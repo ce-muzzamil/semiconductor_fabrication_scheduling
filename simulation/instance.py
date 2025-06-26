@@ -72,13 +72,14 @@ class Instance:
 
     def free_up_machines(self, machines):
         # add machine to list of available machines
-        print(len(machines), 'machines to free up')
+        print(len(machines), len(self.usable_machines), 'machines to free up')
         for machine in machines:
             machine.events.clear()
             self.dm.free_up_machine(self, machine)
 
             for plugin in self.plugins:
                 plugin.on_machine_free(self, machine)
+        print(len(machines), len(self.usable_machines), 'machines to free up')
 
     def free_up_lots(self, lots: List[Lot]):
         # add lot to lists, make it available
