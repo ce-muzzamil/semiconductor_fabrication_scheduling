@@ -48,10 +48,10 @@ class FileInstance(Instance):
             assert pieces == order['PIECES']
             first_release = 0
             release_interval = get_interval(order['REPEAT'], order['RUNITS'])
-            relative_deadline = (date_time_parse(order['DUE']) - date_time_parse(order['START'])).total_seconds()/128
+            relative_deadline = (date_time_parse(order['DUE']) - date_time_parse(order['START'])).total_seconds()
 
             for i in range(order['RPT#']):
-                rel_time = first_release + i * release_interval
+                rel_time = (first_release + i * release_interval)
                 lot = Lot(idx, routes[parts[order['PART']]], order['PRIOR'], rel_time, relative_deadline, order)
                 lots.append(lot)
                 lot_pre[lot.name] = relative_deadline
