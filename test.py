@@ -78,7 +78,6 @@ class SCFabEnv:
         
         self._state = None
 
-
     def get_machine_state(self, m, action):
         t = self.instance.current_time
         _state = [
@@ -152,10 +151,10 @@ class SCFabEnv:
         run_to = 3600 * 24 * self.days
         self.lots_done = 0
         self.instance = FileInstance(self.files, run_to, True, [])
-        # self.instance.next_decision_point()
-        # self.process()
-        # self.eid = np.random.randint(999_999_999)
-        # return self.state
+        self.instance.next_decision_point()
+        self.process()
+        self.eid = np.random.randint(999_999_999)
+        return self.state
 
     def step(self, action):
         if len(self.machine_lot_group_pair) > 0:
