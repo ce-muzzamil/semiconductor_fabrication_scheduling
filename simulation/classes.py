@@ -82,7 +82,6 @@ class Product:
 
 
 class Step:
-
     def __init__(self, idx, pieces_per_lot, d):
         self.idx = idx
         self.order = d['STEP']
@@ -149,6 +148,7 @@ class Lot:
         self.processed_steps = []
         self.priority = priority
         self.release_at = release
+        self.relative_deadline = relative_deadline
         self.deadline_at = self.release_at + relative_deadline
         self.name: str = d['LOT']
         self.part_name: str = d['PART']
